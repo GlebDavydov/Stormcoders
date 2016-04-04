@@ -2,13 +2,15 @@
 #include <iostream>
 using namespace std;
 
+#include"drive.h"
+
 HANDLE hSerial;
 
 void ReadCOM(void);
 
 int initialize(void)
 {
-   LPCTSTR sPortName = "COM8";
+   LPCTSTR sPortName = "COM10";
    hSerial = ::CreateFile(sPortName,GENERIC_READ | GENERIC_WRITE,0,0,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,0);
    if(hSerial==INVALID_HANDLE_VALUE)
     {
@@ -54,8 +56,9 @@ void ReadCOM()
 }
 
 
-void sender(char data[4]){
-    DWORD dwSize = sizeof(data);
+void move_send(char tosend){
+    const void *data = &tosend;
+    DWORD dwSize = sizeof(tosend);
     DWORD dwBytesWritten;
-    (hSerial,data,dwSize,&dwBytesWritten,NULL);
+    WriteFile(hSerial,data,dwSize,&dwBytesWritten,NULL);
 }
