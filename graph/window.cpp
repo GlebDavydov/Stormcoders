@@ -1,6 +1,8 @@
 #include <SFML/Graphics.hpp>
 #include "keys.h"
 #include "move.h"
+#include "drive.h"
+
 #include "realTimeMove.h"
 using namespace sf;
 
@@ -29,6 +31,13 @@ int menu(RenderWindow & window) {
 		menuNum = 0;
 		window.clear(Color(129, 181, 221));
 
+		sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+
 		if (IntRect(130, 50, 200, 30).contains(Mouse::getPosition(window))) { menu1.setColor(Color(19, 0, 255)); menuNum = 1; }
 		if (IntRect(130, 100, 150, 30).contains(Mouse::getPosition(window))) { menu2.setColor(Color(19, 0, 255)); menuNum = 2; }
 		if (IntRect(130, 150, 45, 30).contains(Mouse::getPosition(window))) { menu3.setColor(Color(19, 0, 255)); menuNum = 3; }
@@ -38,6 +47,7 @@ int menu(RenderWindow & window) {
 			if (menuNum == 1)
                 realTimeMove(window);
 			if (menuNum == 2) {
+                    //realTimeMove(window);
                 add_way(window);
             }
 			if (menuNum == 3)  {

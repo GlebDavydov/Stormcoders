@@ -34,6 +34,7 @@ struct moves * path(RenderWindow &window)
     float CurrentFrame = 0;//хранит текущий кадр
     Clock clock, clock1;
     float angle = 0;
+    float speed = 0;
     Vector2f vert;
     Vector2f pos;
     struct move move_up, move_down, move_left, move_right;
@@ -47,7 +48,7 @@ struct moves * path(RenderWindow &window)
     vert.x = 1;
     vert.y = 0;
     Image buffer;
-    buffer.create(640, 480, Color::White);
+    buffer.create(1300, 700, Color::White);
     Texture bufferTexture;
     bufferTexture.loadFromImage(buffer);
     Sprite bufferSprite;
@@ -56,7 +57,7 @@ struct moves * path(RenderWindow &window)
     while (window.isOpen())
     {
 
-        float time = clock.getElapsedTime().asMicroseconds();
+    /*    float time = clock.getElapsedTime().asMicroseconds();
         clock.restart();
         time = time / 800;
 
@@ -177,7 +178,7 @@ struct moves * path(RenderWindow &window)
         tmpherosprite.setPosition(int(16.5 * vert.y + pos.x), int( - 16.5 * vert.x + pos.y));
         tmpherosprite.setRotation(angle * 180 / 3.14);
 
-        if (pos.x > 1 && pos.y > 1 && pos.x < 639 && pos.y < 479)
+        if (pos.x > 1 && pos.y > 1 && pos.x < 1299 && pos.y < 699)
         {
             buffer.setPixel(int(pos.x), int(pos.y), Color::Black);
             buffer.setPixel(int(pos.x + 1), int(pos.y), Color::Black);
@@ -191,6 +192,159 @@ struct moves * path(RenderWindow &window)
         window.clear(Color(255, 255, 255));
         window.draw(bufferSprite);
         window.draw(tmpherosprite);
+        window.display();
+    }*/
+    float time = clock.getElapsedTime().asMicroseconds();
+        clock.restart();
+        time = time / 800;
+
+
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+        if ((Keyboard::isKeyPressed(Keyboard::Up) || (Keyboard::isKeyPressed(Keyboard::W)))) {
+            if (!flag_up)
+            {
+                flag_up = true;
+                struct move * tmp = new struct move;
+                if (!flag_up1)
+                {
+                    tmpmove_up = &move_up;
+                    flag_up1 = true;
+                }
+                tmpmove_up->next = tmp;
+                tmpmove_up = tmp;
+                tmpmove_up->next = NULL;
+                tmpmove_up->begin = clock1.getElapsedTime().asMicroseconds() - start;
+            }
+            CurrentFrame += 0.01*time; //служит для прохождения по "кадрам". переменная доходит до трех суммируя произведение времени и скорости. изменив 0.005 можно изменить скорость анимации
+            speed += 0.001 * time;
+            //herosprite.move(speed * vert.x, speed * vert.y);//происходит само движение персонажа вниз
+        }
+        else
+        {
+            if (tmpmove_up != NULL && flag_up)
+            tmpmove_up->end = clock1.getElapsedTime().asMicroseconds() - start;
+            flag_up = false;
+        }
+        if ((Keyboard::isKeyPressed(Keyboard::Down) || (Keyboard::isKeyPressed(Keyboard::S)))) {
+            if (!flag_down)
+            {
+                flag_down = true;
+                struct move * tmp = new struct move;
+                if (!flag_down1)
+                {
+                    tmpmove_down = &move_down;
+                    flag_down1 = true;
+                }
+                tmpmove_down->next = tmp;
+                tmpmove_down = tmp;
+                tmpmove_down->next = NULL;
+                tmpmove_down->begin = clock1.getElapsedTime().asMicroseconds() - start;
+            }
+            CurrentFrame += 0.001*time; //служит для прохождения по "кадрам". переменная доходит до трех суммируя произведение времени и скорости. изменив 0.005 можно изменить скорость анимации
+            speed -= 0.001 * time;
+            //происходит само движение персонажа вниз
+        }
+        else
+        {
+            if (tmpmove_down != NULL && flag_down)
+            tmpmove_down->end = clock1.getElapsedTime().asMicroseconds() - start;
+            flag_down = false;
+        }
+        if ((Keyboard::isKeyPressed(Keyboard::Right) || (Keyboard::isKeyPressed(Keyboard::D)))) {
+            if (!flag_right)
+            {
+                flag_right = true;
+                struct move * tmp = new struct move;
+                if (!flag_right1)
+                {
+                    tmpmove_right = &move_right;
+                    flag_right1 = true;
+                }
+                tmpmove_right->next = tmp;
+                tmpmove_right = tmp;
+                tmpmove_right->next = NULL;
+                tmpmove_right->begin = clock1.getElapsedTime().asMicroseconds() - start;
+            }
+            angle += time * speed / 1000;
+            vert.x = cos(angle);
+            vert.y = sin(angle);
+        }
+        else
+        {
+            if (tmpmove_right != NULL && flag_right)
+            tmpmove_right->end = clock1.getElapsedTime().asMicroseconds() - start;
+            flag_right = false;
+        }
+        if ((Keyboard::isKeyPressed(Keyboard::Left) || (Keyboard::isKeyPressed(Keyboard::A)))) {
+            if (!flag_left)
+            {
+                flag_left = true;
+                struct move * tmp = new struct move;
+                if (!flag_left1)
+                {
+                    tmpmove_left = &move_left;
+                    flag_left1 = true;
+                }
+                tmpmove_left->next = tmp;
+                tmpmove_left = tmp;
+                tmpmove_left->next = NULL;
+                tmpmove_left->begin = clock1.getElapsedTime().asMicroseconds() - start;
+            }
+            angle -= time * speed / 1000;
+            vert.x = cos(angle);
+            vert.y = sin(angle);
+        }
+        else
+        {
+            if (tmpmove_left != NULL && flag_left)
+            tmpmove_left->end = clock1.getElapsedTime().asMicroseconds() - start;
+            flag_left = false;
+        }
+        if ((Keyboard::isKeyPressed(Keyboard::Space))) {
+            struct moves * mov = new struct moves;
+            mov->up = &move_up;
+            mov->left = &move_left;
+            mov->right = &move_right;
+            mov->down = &move_down;
+            //window.close();
+            return mov;
+        }
+        if (speed > 2)
+            speed = 2;
+        if (speed < -2)
+            speed = -2;
+        if (!Keyboard::isKeyPressed(Keyboard::W) && !Keyboard::isKeyPressed(Keyboard::S))
+        {
+            if (speed < 0)
+                speed += 0.0006 * time;
+            if (speed > 0)
+                speed -= 0.0006 * time;
+        }
+        herosprite.move(speed * vert.x, speed * vert.y);
+        pos = herosprite.getPosition();
+       // tmpherosprite.setPosition(int(16.5 * vert.y + pos.x), int( - 16.5 * vert.x + pos.y));
+        herosprite.setRotation(angle * 180 / 3.14);
+
+        if (pos.x > 1 && pos.y > 1 && pos.x < 1299 && pos.y < 699)
+        {
+            buffer.setPixel(int(pos.x), int(pos.y), Color::Black);
+            buffer.setPixel(int(pos.x + 1), int(pos.y), Color::Black);
+            buffer.setPixel(int(pos.x - 1), int(pos.y), Color::Black);
+            buffer.setPixel(int(pos.x), int(pos.y - 1), Color::Black);
+            buffer.setPixel(int(pos.x), int(pos.y + 1), Color::Black);
+            bufferTexture.loadFromImage(buffer);
+            bufferSprite.setTexture(bufferTexture);
+        }
+        //while (clock.getElapsedTime().asMicroseconds() < 10000)
+
+        window.clear(Color(255, 255, 255));
+        window.draw(bufferSprite);
+        window.draw(herosprite);
 
         window.display();
     }
@@ -203,9 +357,9 @@ struct moves * path(RenderWindow &window)
 
 }
 
-int ride(RenderWindow &window)
+int add_way(RenderWindow &window)
 {
-    //initialize();
+
    /* QTextStream cout(stdout);*/
     //RenderWindow window(sf::VideoMode(640, 480), "Lesson 7. kychka-pc.ru");
     Image image;
@@ -223,6 +377,8 @@ int ride(RenderWindow &window)
     Vector2f pos;
     float speed = 0;
     struct moves * mov = path(window);
+
+
     /*struct move * move_up = mov->up;
     struct move * move_down = mov->down;
     struct move * move_left = mov->left;
@@ -375,5 +531,6 @@ int ride(RenderWindow &window)
 
 
     }
+  menu(window);
 
 }

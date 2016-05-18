@@ -10,7 +10,7 @@ int realTimeMove(RenderWindow &window)
 {
     window.close();
     Clock clock, clock1;
-    initialize();
+
     bool flag = true;
     while (!Keyboard::isKeyPressed(Keyboard::Space))
     {
@@ -91,10 +91,11 @@ int realTimeMove(RenderWindow &window)
             move_send(ch);
             while (clock.getElapsedTime().asMicroseconds() < 103000);
         }
+        else if(Keyboard::isKeyPressed(Keyboard::Escape))
+        {
+            RenderWindow window( VideoMode(1300, 700), "Test!");
+            menu(window);
+        }
     }
-    /*if(Keyboard::isKeyPressed(Keyboard::Escape)){
-        RenderWindow window( VideoMode(1300, 700), "Test!");
-        menu(window);
-    }*/
-    menu(window);
+    //menu(window);
 }
