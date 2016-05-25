@@ -1,3 +1,4 @@
+
 #include "I2Cdev.h"
 
 #include "MPU6050_6Axis_MotionApps20.h"
@@ -154,7 +155,7 @@ void loop(){
         {
           for(int i = 1; i <= 4; i++){          //KEY
             digitalWrite(LED, HIGH);
-            delayMicroseconds( highKey);
+            delayMicroseconds(highKey);
             digitalWrite(LED, LOW);
             delayMicroseconds(lowKey);
           }                                     // END KEY
@@ -273,7 +274,7 @@ void loop(){
      }                                     //END FORWARD&LEFT
      /*
  **************************************************************/
-      else if(val == 'p'){
+      else if(val == 'p' || val == 'q'){
          if (!dmpReady) return;
             while (!mpuInterrupt && fifoCount < packetSize) {
             
@@ -295,14 +296,14 @@ void loop(){
                     mpu.dmpGetGravity(&gravity, &q);
                     mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);
                     mpu.dmpGetLinearAccelInWorld(&aaWorld, &aaReal, &q);
-                
-                    Serial.print(aaWorld.x/16084);
-                    Serial.print("\t");
-                    Serial.print(aaWorld.y/16084);
-                    Serial.print("\n");
-             }
+                 if(val == 'p'){
+                    Serial.print((float)aaWorld.x/16084);
+                 } else if ( val == 'q'){
+                    Serial.print((float)aaWorld.y/16084);
+                 }
+                 }
           }
-          else if(val = 'l'){
+          else if(val == 'l'){
                 int duration, cm;
               digitalWrite(trigPin, LOW);
               delayMicroseconds(2);
@@ -313,8 +314,6 @@ void loop(){
               cm = duration / 58;
               if(cm >= 0){
               Serial.print(cm);
-              Serial.println(" cm");
-              //delay(100);
               }
         
             }
