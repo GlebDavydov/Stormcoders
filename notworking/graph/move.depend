@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1460327578 source:d:\stormcoders\graph\main.cpp
+	<SFML/Graphics.hpp>
+	"window.h"
+
+1460327578 d:\stormcoders\graph\window.h
+	<SFML/Graphics.hpp>
+

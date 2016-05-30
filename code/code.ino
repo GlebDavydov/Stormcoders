@@ -298,8 +298,10 @@ void loop(){
                     mpu.dmpGetLinearAccelInWorld(&aaWorld, &aaReal, &q);
                  if(val == 'p'){
                     Serial.print((float)aaWorld.x/16084);
+                    Serial.print("&");
                  } else if ( val == 'q'){
                     Serial.print((float)aaWorld.y/16084);
+                    Serial.print("&");
                  }
                  }
           }
@@ -314,6 +316,7 @@ void loop(){
               cm = duration / 58;
               if(cm >= 0){
               Serial.print(cm);
+              Serial.print("&");
               }
         
             }
